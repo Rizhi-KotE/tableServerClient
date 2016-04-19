@@ -18,7 +18,10 @@ import javafx.stage.Stage;
 public class ViewServer extends Application {
 	JFrame frame;
 
-	TextArea text;
+	public static void appendText(String s){
+		text.appendText(s);
+	}
+	private static TextArea text;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Pane root = new VBox();
@@ -32,7 +35,7 @@ public class ViewServer extends Application {
 			engine.stop();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}});
 		TextFieldLogger.setArea(text);
 

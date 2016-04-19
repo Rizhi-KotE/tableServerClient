@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import model.Author;
 import model.Book;
 
 public class AddForm {
@@ -32,7 +33,7 @@ public class AddForm {
 				
 				Book book;
 				try {
-					book = new Book(bookNameField.getText(),athorNameField.getText(),Integer.parseInt(tomesNameField.getText()),Integer.parseInt(circulationNameField.getText()));
+					book = new Book(bookNameField.getText(),new Author(AuthorathorNameField.getText(),""),Integer.parseInt(tomesNameField.getText()),Integer.parseInt(circulationNameField.getText()));
 					controler.addBookToLibrary(book);
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block

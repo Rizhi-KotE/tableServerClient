@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import implementation.Library;
 import implementation.RemoteLibrary;
-import server.TextFieldLogger;
 
 public class Engine {
 	private static final Logger log = Logger.getLogger(Engine.class);
@@ -20,7 +19,7 @@ public class Engine {
 	int port = 0;
 	public Engine(int port) {
 		if (System.getSecurityManager() == null) {
-			//System.setSecurityManager(new RMISecurityManager());
+			System.setSecurityManager(new RMISecurityManager());
 			log.debug("set RMISecurityManager");
 		}
 		try {
@@ -28,8 +27,8 @@ public class Engine {
 			log.debug("create registry whith port " + port);
 			this.port = port;
 		} catch (RemoteException e) {
-			log.error(e);
-			e.printStackTrace();
+			log.error("error in creating registry", e);
+			//e.printStackTrace();
 		}
 	}
 
@@ -75,20 +74,18 @@ public class Engine {
 		try {
 			remoteLib = new RemoteLibrary(library);
 		} catch (RemoteException e) {
-			log.error("Fail in creating remote library");
-			log.error(e);
-			System.exit(1);
+			log.error("Fail in creating remote library", e);
 		}
 		try {
 			addRemoteObject("Library", remoteLib);
 		} catch (RemoteException e) {
-			log.error(e);
+			log.error("error in addeding remote library", e);
 		} catch (AlreadyBoundException e) {
 			log.debug("Remote library already registered");
 			try {
 				rebindObject("Library", remoteLib);
 			} catch (RemoteException e1) {
-				log.error(e);
+				log.error("error in rebinding object", e);
 			}
 		}
 	}
