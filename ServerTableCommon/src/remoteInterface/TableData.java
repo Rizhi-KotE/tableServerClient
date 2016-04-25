@@ -1,5 +1,6 @@
 package remoteInterface;
 
+import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -17,4 +18,7 @@ public interface TableData extends Remote {
 	
 	Book[] removeElements(SerializableBookPredicate predBookate) throws RemoteException;
 
+	Book[] openFile(File file) throws RemoteException;
+	
+	void saveFile(File file, Book[] books) throws RemoteException;
 }

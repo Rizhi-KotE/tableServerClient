@@ -1,5 +1,6 @@
 package implementation;
 
+import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
@@ -80,5 +81,17 @@ public class RemoteLibrary extends UnicastRemoteObject implements TableData {
 		});
 		ViewServer.appendText("correct\n");
 		return out.toArray(new Book[out.size()]);
+	}
+
+	@Override
+	public Book[] openFile(File file) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveFile(File file, Book[] books) throws RemoteException {
+		// TODO Auto-generated method stub
+		
 	}
 }

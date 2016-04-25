@@ -18,6 +18,7 @@ import client.view.PagedTable;
 import exceptions.GetRegistryException;
 import implementation.SerializableBookPredicate;
 import model.Book;
+import remoteInterface.FileTreeCreator;
 import remoteInterface.TableData;
 
 public class TableControler {
@@ -25,6 +26,8 @@ public class TableControler {
 	private TableData libraryStub;
 	private Map<PagedTable, SerializableBookPredicate> observer;
 
+	String IP;
+	int port;
 	public TableControler() {
 		observer = new HashMap<>();
 		if(System.getSecurityManager()==null){
@@ -36,6 +39,8 @@ public class TableControler {
 	public TableControler(String IP, int port)
 			throws RemoteException, GetRegistryException, NotBoundException, ClassCastException {
 		this();
+		this.IP = IP;
+		this.port = port;
 		Registry registry = null;
 		try {
 			registry = LocateRegistry.getRegistry(IP, port);
@@ -183,5 +188,28 @@ public class TableControler {
 		}
 		fireModelChange();
 		return out;
+	}
+	
+	public FileTreeCreator getFileTreeCreator() throws AccessException, RemoteException, NotBoundException{
+		Registry registry = null;
+		try {
+			registry = LocateRegistry.getRegistry(IP, port);
+		} catch (RemoteException e) {
+			log.error(e);
+			e.printStackTrace();
+			throw new GetRegistryException();
+		}
+
+		try {
+			return (FileTreeCreator) registry.lookup("fileTreeCreator");
+		} catch (NotBoundException e) {
+			log.error(e);
+			e.printStackTrace();
+			throw e;
+		} catch (ClassCastException e) {
+			log.error(e);
+			e.printStackTrace();
+			throw e;
+		}
 	}
 }

@@ -7,17 +7,17 @@ public class Book implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -5647361092122034611L;
-	public static final String AUTHOR_NAME = "author";
+	public static final String AUTHOR_NAME = "authorName";
 	public static final String BOOK_NAME = "bookName";
 	public static final String CIRCULATION = "circ";
 	public static final String TOME_NUMBER = "tomeNumber";
-	private Author author;
+	private String authorName;
 	private String bookName;
 	private int circulation;
 	private int tomeNumber;
 	private int finalTomeNumber;
-	public Book(Author author, String bookName, int circ, int tomes) {
-		this.author = author;
+	public Book(String author, String bookName, int circ, int tomes) {
+		authorName = author;
 		this.bookName = bookName;
 		circulation = circ;
 		tomeNumber = tomes;
@@ -30,10 +30,10 @@ public class Book implements Serializable{
 		return finalTomeNumber;
 	}
 	/**
-	 * @return the author
+	 * @return the authorName
 	 */
 	public String getAuthorName() {
-		return author.getFirstName();
+		return authorName;
 	}
 	/**
 	 * @return the bookName
