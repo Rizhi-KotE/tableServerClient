@@ -1,5 +1,6 @@
 package client.controler;
 
+import java.io.File;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
@@ -31,7 +32,7 @@ public class TableControler {
 	public TableControler() {
 		observer = new HashMap<>();
 		if(System.getSecurityManager()==null){
-			//System.setSecurityManager(new RMISecurityManager());
+			System.setSecurityManager(new RMISecurityManager());
 			log.debug("security manager is added");
 		}
 	}
@@ -211,5 +212,23 @@ public class TableControler {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	
+	public void saveFileOnServer(File file){
+		try {
+			libraryStub.saveFile(file);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void openFileOnServer(File file){
+		try {
+			Arrays.asList(libraryStub.openFile(file));
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		fireModelChange();
 	}
 }

@@ -20,5 +20,5 @@ public interface TableData extends Remote {
 
 	Book[] openFile(File file) throws RemoteException;
 	
-	void saveFile(File file, Book[] books) throws RemoteException;
+	void saveFile(File file) throws RemoteException;
 }

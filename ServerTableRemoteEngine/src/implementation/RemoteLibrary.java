@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import org.apache.log4j.Logger;
 
+import frm.SaveGraph;
 import model.Book;
 import remoteInterface.TableData;
 import server.ViewServer;
@@ -85,13 +86,13 @@ public class RemoteLibrary extends UnicastRemoteObject implements TableData {
 
 	@Override
 	public Book[] openFile(File file) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		library.openFile(SaveGraph.loadLybrary(file));
+		List<Book> books = library.getBooks();
+		return books.toArray(new Book[books.size()]);
 	}
 
 	@Override
-	public void saveFile(File file, Book[] books) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+	public void saveFile(File file) throws RemoteException {
+		SaveGraph.save(file, library.getBooks());		
 	}
 }

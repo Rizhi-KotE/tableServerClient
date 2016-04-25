@@ -8,6 +8,7 @@ import client.view.AddForm;
 import client.view.ConnectForm;
 import client.view.MainMenu;
 import client.view.PagedTable;
+import client.view.ServerFileChooser;
 import client.view.TableDialog;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -95,21 +96,37 @@ public class Main extends Application {
 		TilePane tools = new TilePane(Orientation.VERTICAL);
 		tools.setPadding(new Insets(25, 10, 50, 0));
 		tools.setVgap(5);
-		
-
-		Button connectTool = new Button("connect");
-		connectTool.setOnAction(connect -> {
-			Stage stage = new Stage();
-			Pane root = new ConnectForm(mainControler, stage).getPane();
-			Scene scene = new LocalizedScene(root);
-			stage.setScene(scene);
-			stage.show();
-			stage.setOnCloseRequest(close -> stage.close());
+				
+		Button saveTool = new Button("$saveOnServer");
+		saveTool.setOnAction(save -> {
+			ServerFileChooser chooser;
+			try {
+				chooser = new ServerFileChooser(mainControler);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}
+			chooser.showSaveFileDialog();
 		});
-		connectTool.setMaxWidth(Double.MAX_VALUE);
+		saveTool.setMaxWidth(Double.MAX_VALUE);
+
+		Button openTool = new Button("$openOnServer");
+		openTool.setOnAction(save -> {
+			ServerFileChooser chooser;
+			try {
+				chooser = new ServerFileChooser(mainControler);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}
+			chooser.showOpenFileDialog();
+		});
+		openTool.setMaxWidth(Double.MAX_VALUE);
 
 		
-		Button addTool = new Button("add");
+		Button addTool = new Button("$add");
 		addTool.setOnAction(add -> {
 			Stage stage = new Stage();
 			Pane root = new AddForm(mainControler).getPane();
@@ -120,13 +137,25 @@ public class Main extends Application {
 		});
 		addTool.setMaxWidth(Double.MAX_VALUE);
 
-		Button findAndRemoveTool = new Button("findAndRemove");
+		Button findAndRemoveTool = new Button("$findAndRemove");
 		findAndRemoveTool.setOnAction(action -> {
 			new TableDialog(mainControler).showDeleteDialog();
 		});
 		findAndRemoveTool.setMaxWidth(Double.MAX_VALUE);
 
-		tools.getChildren().addAll(connectTool, addTool, findAndRemoveTool);
+
+		Button connectTool = new Button("$connect");
+		connectTool.setOnAction(connect -> {
+			Stage stage = new Stage();
+			Pane root = new ConnectForm(mainControler, stage).getPane();
+			Scene scene = new LocalizedScene(root);
+			stage.setScene(scene);
+			stage.show();
+			stage.setOnCloseRequest(close -> stage.close());
+		});
+		connectTool.setMaxWidth(Double.MAX_VALUE);
+
+		tools.getChildren().addAll(connectTool, openTool, saveTool, addTool, findAndRemoveTool);
 		return tools;
 	}
 
@@ -139,7 +168,7 @@ public class Main extends Application {
 		prev.setOnAction(e -> {
 			table.previos();
 		});
-		Button first = new Button("first");
+		Button first = new Button("$first");
 		first.setOnAction(e -> {
 			table.first();
 		});
@@ -149,7 +178,7 @@ public class Main extends Application {
 			table.next();
 		});
 		next.setMaxWidth(Double.MAX_VALUE);
-		Button end = new Button("end");
+		Button end = new Button("$end");
 		end.setOnAction(e -> {
 			table.end();
 		});

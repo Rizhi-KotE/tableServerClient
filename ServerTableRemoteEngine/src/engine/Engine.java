@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.File;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
@@ -11,12 +12,14 @@ import java.rmi.server.UnicastRemoteObject;
 import org.apache.log4j.Logger;
 
 import implementation.Library;
+import implementation.RemoteFileTreeCreator;
 import implementation.RemoteLibrary;
 
 public class Engine {
 	private static final Logger log = Logger.getLogger(Engine.class);
 
 	int port = 0;
+
 	public Engine(int port) {
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new RMISecurityManager());
@@ -28,13 +31,14 @@ public class Engine {
 			this.port = port;
 		} catch (RemoteException e) {
 			log.error("error in creating registry", e);
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
 	public Engine() {
 		this(1099);
 	}
+
 	public void addRemoteObject(String name, UnicastRemoteObject object) throws RemoteException, AlreadyBoundException {
 		Registry registry = null;
 		try {
@@ -48,7 +52,8 @@ public class Engine {
 			throw e;
 		}
 	}
-	public void rebindObject(String name, UnicastRemoteObject object) throws RemoteException{
+
+	public void rebindObject(String name, UnicastRemoteObject object) throws RemoteException {
 		Registry registry = null;
 		try {
 			registry = LocateRegistry.getRegistry(port);
@@ -56,9 +61,10 @@ public class Engine {
 			throw e;
 		}
 		registry.rebind(name, object);
-		
+
 	}
-	public void unbindObject(String name) throws RemoteException, NotBoundException{
+
+	public void unbindObject(String name) throws RemoteException, NotBoundException {
 		Registry registry = null;
 		try {
 			registry = LocateRegistry.getRegistry(port);
@@ -66,8 +72,9 @@ public class Engine {
 			throw e;
 		}
 		registry.unbind(name);
-		
+
 	}
+
 	public void start() {
 		Library library = new Library();
 		RemoteLibrary remoteLib = null;
@@ -88,9 +95,29 @@ public class Engine {
 				log.error("error in rebinding object", e);
 			}
 		}
+		RemoteFileTreeCreator remoteTreeCreator = null;
+		try {
+			remoteTreeCreator = new RemoteFileTreeCreator(new File(System.getProperty("user.dir")));
+		} catch (RemoteException e) {
+			log.error("Fail in creating remote fileTreeCreator", e);
+		}
+		try {
+			addRemoteObject("fileTreeCreator", remoteTreeCreator);
+		} catch (RemoteException e) {
+			log.error("error in addeding remote fileTreeCreator", e);
+		} catch (AlreadyBoundException e) {
+			log.debug("Remote fileTreeCreator already registered");
+			try {
+				rebindObject("fileTreeCreator", remoteTreeCreator);
+			} catch (RemoteException e1) {
+				log.error("error in rebinding object", e);
+			}
+		}
+
 	}
+
 	public void stop() throws NotBoundException, RemoteException {
-			unbindObject("Library");
+		unbindObject("Library");
 	}
 
 }
